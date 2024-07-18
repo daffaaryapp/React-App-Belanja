@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const groceryItems = [
   {
     id: 1,
@@ -37,18 +39,27 @@ function Header(){
   return <h1>Catatan Belanjaku 📝</h1>
 }
 function Form(){
+
+  const [name, setName] = useState('');
+  const [quantity, setQuantity] = useState(1);
+  
+  function handleSubmit(e){
+    e.preventDefault();
+    alert(quantity);
+  }
+
+  const quantityNum = [...Array(20)].map((_,i) => (
+    <option value={i + 1} key={i + 1}>
+      {i + 1}
+    </option>
+  ));
+
   return (
-    <form className="add-form">
+    <form className="add-form" onSubmit={handleSubmit}>
         <h3>Hari ini belanja apa kita?</h3>
         <div>
-          <select>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-          </select>
-          <input type="text" placeholder="nama barang..." />
+          <select value={quantity} onChange={(e) => setQuantity(e.target.value)}>{quantityNum}</select>
+          <input type="text" placeholder="nama barang..." value={name} onChange={(e) => setName(e.target.value)}/>
         </div>
         <button>Tambah</button>
       </form>
@@ -60,11 +71,7 @@ function GroceryList(){
       <div className="list">
         <ul>
           {groceryItems.map((item) => (
-            <li key={item.id}>
-              <input type="checkbox"  />
-              <span style={ item.checked? {textDecoration: 'line-through'}:{}  }>{item.quantity} {item.name}</span>
-              <button>&times;</button>
-            </li>
+            <Item item={item} key={item.id}/>
           ))}
         
       </ul>
@@ -80,6 +87,18 @@ function GroceryList(){
     </>
   )
 }
+
+function Item({item}){
+  return (
+    <li key={item.id}>
+      <input type="checkbox"  />
+      <span style={ item.checked? {textDecoration: 'line-through'}:{}  }>{item.quantity} {item.name}</span>
+      <button>&times;</button>
+    </li>
+  )
+}
+
+
 function Footer(){
   return <footer className="stats">Ada 10 barang di daftar belanjaan, 5 barang sudah dibeli (50%)</footer>
 }
